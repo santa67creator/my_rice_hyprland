@@ -1,0 +1,395 @@
+@define-color accent #7582F1;
+@define-color text #FFFFFF;
+@define-color muted rgba(255,255,255,0.66);
+@define-color glass transparent;
+@define-color card transparent;
+@define-color border rgba(255,255,255,0.13);
+
+* {
+  font-family: Inter, sans-serif;
+  font-size: 15px;
+  color: @text;
+  text-shadow: none;
+  box-shadow: none;
+}
+
+.control-center {
+  background: rgba(255, 255, 255, 0.076);
+  border: 0.7px solid rgba(210, 208, 208, 0.798);
+  border-radius: 22px 22px 22px 22px;
+  padding: 6px;
+  /*backdrop-filter: blur(12px);*/
+}
+
+.control-center-list {
+  background: transparent;
+  padding: 0;
+}
+
+.widget {
+  background: transparent;
+  border: 0;
+  border-radius: 18px;
+  margin: 0 0 8px 0;
+  padding: 14px 16px;
+}
+
+.widget-title {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-bottom: none;
+  border-radius:18px 18px 0 0;
+  margin-bottom: 0;
+  padding: 18px 18px 12px;
+}
+
+.widget-title > label {
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.widget-title > button {
+  background: @accent;
+  color: white;
+  border: 0;
+  border-radius: 11px;
+  padding: 10px 17px;
+  font-weight: 600;
+}
+
+.widget-title > button:hover {
+  background: shade(@accent, 1.10);
+}
+
+.widget-dnd {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-top: none;
+  border-radius: 0 0 18px 18px;
+  margin-bottom: 8px;
+  padding: 12px 18px 18px;
+}
+
+.widget-dnd > label {
+  font-size: 16px;
+  font-weight: 350;
+}
+
+.widget-dnd switch {
+  min-width: 48px;
+  min-height: 28px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+}
+
+.widget-dnd switch slider {
+  min-width: 23px;
+  min-height: 23px;
+  margin: 2px;
+  background: white;
+  border: 0;
+  border-radius: 999px;
+}
+
+.widget-dnd switch:checked {
+  background: @accent;
+  border-color: @accent;
+}
+
+.widget-mpris {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 0;
+  border-radius: 18px 18px 0 0;
+  margin-bottom: 0;
+  padding: 4px;
+}
+
+.widget-mpris-player {
+  padding: 0;
+}
+
+/* This class had no rule at all, which is the actual bug: swaync's GTK4
+   port moved album-art sizing from config.json's "image-size"/"image-radius"
+   to CSS. Those JSON keys still work for real downloaded album art, but the
+   moment a player has no art and swaync falls back to a generic icon (e.g.
+   a browser tab with no MPRIS art), that fallback ignores the JSON value
+   entirely and expands to fill the row — which is what was dragging the
+   whole mpris card, and everything below it, down the page. min/max-width
+   +height pin BOTH the real-art case and the icon-fallback case to the same
+   108px the config already asks for; -gtk-icon-size is a belt-and-suspenders
+   for the icon-fallback path specifically. */
+/* Also missing: swaync blurs the album art and stretches it behind the
+   whole player row as a decorative backdrop (the "MPRIS background blur"
+   feature, class .mpris-overlay). With no rule here, that blur shows at
+   full, unmuted brightness — on art with strong colors (like a browser's
+   fallback icon) it reads as a big loose color blob nearly the width of
+   the widget, which is what still looked "wrong sized" even after the
+   album-art fix. Darkening it to match the rest of the glass card hides
+   it back down to a subtle tint, same as the reference. */
+.mpris-overlay {
+  background-color: rgba(0, 0, 0, 0.55);
+  background: transparent;
+  opacity: 0.9;
+}
+
+.widget-mpris-album-art {
+  min-width: 80px;
+  min-height: 80px;
+  max-width: 80px;
+  max-height: 80px;
+  -gtk-icon-size: 80px;
+  margin-right: 12px;
+  border-radius: 14px;
+}
+
+.widget-mpris-title {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.widget-mpris-subtitle {
+  color: @muted;
+  font-size: 15px;
+}
+
+.widget-mpris button {
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  min-width: 42px;
+  min-height: 42px;
+  font-size: 22px;
+}
+
+.widget-mpris button:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.widget-volume {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid @border;
+  border-top: 0;
+  border-radius: 0 0 17px 17px;
+  margin-bottom: 8px;
+  padding: 12px 18px 16px;
+}
+
+.widget-volume label {
+  color: @muted;
+  font-weight: 600;
+}
+
+scale trough {
+  min-height: 7px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+}
+
+scale highlight {
+  border-radius: 999px;
+  background: @accent;
+}
+
+scale slider {
+  min-width: 18px;
+  min-height: 18px;
+  margin: -6px;
+  border: 0;
+  border-radius: 999px;
+  background: white;
+}
+
+.widget-notifications {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid @border;
+  border-radius: 17px;
+  padding: 10px;
+}
+
+.notification-row {
+  background: transparent;
+  padding: 5px;
+}
+
+.notification {
+  background: rgba(255,255,255,0.025);
+
+    border:1px solid rgba(255,255,255,0.05);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.notification:hover {
+  background: rgba(255,255,255,0.10);
+}
+
+.notification-content {
+  background: transparent;
+}
+
+.notification-default-action,
+.notification-action {
+  background: transparent;
+  border: 0;
+}
+
+.notification-close-button {
+  background: rgba(255,255,255,0.10);
+  border: 0;
+  border-radius: 999px;
+  min-width: 26px;
+  min-height: 26px;
+}
+
+.notification-close-button:hover {
+  background: rgba(255,255,255,0.20);
+}
+
+.notification-summary {
+  color: white;
+  font-weight: 750;
+}
+
+.notification-body,
+.notification-time {
+  color: @muted;
+}
+
+.widget-buttons-grid {
+  background: rgba(0,0,0,0.12);
+  border: 1px solid @border;
+  border-radius: 17px;
+  padding: 25px 8px 35px;
+}
+ 
+.buttons-grid-icon {
+  font-family: "Symbols Nerd Font", sans-serif; /* match whatever icon font you use for "label" */
+  font-size: 22px;
+}
+
+.buttons-grid-text {
+  font-size: 11px;
+  font-weight: 500;
+  color: @muted;
+}
+ 
+.widget-buttons-grid flowbox {
+  background: transparent;
+}
+
+.widget-buttons-grid flowboxchild {
+  padding: 3px;
+  min-width: 0;
+}
+
+.widget-buttons-grid flowboxchild button {
+  min-width: 52px;
+  min-height: 52px;
+  background: rgba(255,255,255,0.10);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+
+  padding: 0;
+}
+
+.widget-buttons-grid flowboxchild button:hover {
+  background: rgba(255,255,255,0.18);
+}
+
+.widget-buttons-grid flowboxchild button:checked {
+  background: @accent;
+  border-color: @accent;
+  color: white;
+}
+
+/* Sound shortcut: neutral glass button */
+.widget-buttons-grid flowboxchild:nth-child(1) button {
+  background: rgba(255,255,255,0.15);
+}
+
+/* Sleep shortcut: subdued glass button */
+.widget-buttons-grid flowboxchild:nth-child(4) button {
+  background: rgba(80,88,93,0.58);
+}
+
+.floating-notifications {
+  background: transparent;
+}
+
+.blank-window {
+  background: transparent;
+    border-radius: 22px;
+    border: 1px solid rgba(255,255,255,.12);
+}
+
+
+/* Empty notification state — GTK CSS */
+.widget-notifications {
+  min-height: 250px;
+}
+
+/* GTK CSS styles the actual placeholder widget directly. */
+.control-center-list-placeholder {
+  background-image: url("empty-notifications.svg");
+  background-repeat: no-repeat;
+  background-position: center 12px;
+  background-size: 50px 50px;
+  padding: 68px 16px 16px;
+  halign: center;
+  color: rgb(255, 255, 255);
+}
+
+/* Hide swaync's built-in notification icon. */
+.control-center-list-placeholder image {
+  opacity: 0;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 0 -96px 0;
+}
+
+/* Empty-state text — GTK CSS only. */
+.control-center-list-placeholder label {
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  xalign: 0.5;
+  halign: fill;
+  text-shadow:
+    0 0 5px rgba(0, 204, 255, 0.24),
+    0 0 12px rgba(0, 170, 242, 0.1);
+}
+
+.widget-notifications .control-center-list-placeholder {
+  border-radius: 14px;
+}
+
+/* Four quick controls on one line */
+.widget-buttons-grid flowbox {
+  min-children-per-line: 4;
+  max-children-per-line: 4;
+  max-width: 300px;
+  margin: 0 32px;
+  homogeneous: true;
+  justify-content: center;
+}
+
+.widget-buttons-grid flowboxchild button:active {
+  background: @accent;
+  border-color: @accent;
+}
+
+.widget-buttons-grid flowboxchild {
+  padding: 3px;
+  min-width: 0;
+}
+
+.widget-buttons-grid flowboxchild button {
+  min-width: 64px;
+  min-height: 64px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 14px;
+}

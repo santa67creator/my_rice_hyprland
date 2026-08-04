@@ -1,0 +1,70 @@
+{
+  "positionX": "left",
+  "positionY": "top",
+  "layer": "overlay",
+  "control-center-layer": "top",
+  "control-center-width": 380,
+  "control-center-height": -1,
+  "control-center-margin-top": 62,
+  "control-center-margin-bottom": 78,
+  "control-center-margin-left": 12,
+  "control-center-margin-right": 0,
+  "control-center-exclusive-zone": false,
+  "fit-to-screen": false,
+  "text-empty": "     No Notifications\nYou're all caught up!",
+  "widgets": [
+    "title",
+    "dnd",
+    "mpris",
+    "volume",
+    "notifications",
+    "buttons-grid"
+  ],
+  "widget-config": {
+    "title": {
+      "text": "Notifications",
+      "clear-all-button": true,
+      "button-text": "Clear All"
+    },
+    "dnd": {
+      "text": "Do Not Disturb"
+    },
+    "mpris": {
+      "image-size": 108,
+      "image-radius": 14
+    },
+    "volume": {
+      "label": "󰕾"
+    },
+    "buttons-grid": {
+      "actions": [
+        {
+          "label": "󰕾",
+          "text": "\nSound",
+          "command": "pavucontrol",
+          "type": "button" 
+        },
+        {
+          "label": "󰖩",
+          "text": "\nWi-Fi",
+            "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && nmcli radio wifi on || nmcli radio wifi off'",
+            "update-command": "sh -c '[ \"$(nmcli radio wifi)\" = enabled ] && echo true || echo false'",
+          "type": "toggle"
+        },
+        {
+          "label": "󰂯",
+          "text": "\nBluetooth",
+           "command": "sh -c '[ \"$SWAYNC_TOGGLE_STATE\" = true ] && bluetoothctl power on || bluetoothctl power off'",
+            "update-command": "bluetoothctl show | grep -q 'Powered: yes' && echo true || echo false",
+          "type": "toggle"
+        },
+        {
+          "label": "󰤄",
+          "text": "\nSleep",
+          "command": "systemctl suspend",
+          "type": "button"
+        }
+      ]
+    }
+  }
+}
