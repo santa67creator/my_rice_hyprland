@@ -1,0 +1,61 @@
+@import "colors/gruvbox-material.css";
+
+*{
+    all:unset;
+    font-family: "Iosevka Nerd Font Propo", monospace;
+
+}
+
+window#waybar {
+    border-radius: 0 0 10px 10px;
+}
+
+#workspaces {
+    min-width: 100px;
+    font-size: 0.4rem;
+    padding: 2px 4px;
+    margin: 5px 0;
+    border-radius: 99px;
+}
+
+#workspaces button {
+    background-color: @bg4;
+    color: transparent;
+    padding: 0px 5px;
+    border-radius: 99px;
+    margin: 0 2px;
+    min-width: 4px;
+}
+
+#workspaces button.active {
+    background-color: @blue;
+    min-width: 1.4rem;
+    transition: all 200ms ease-in-out;
+
+}
+
+#clock#left {
+    margin: 0 15px;
+    font-weight: 700;
+    font-size: 1.12rem;
+}
+
+#cava {  
+    margin-right: 3px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+
+#custom-notification {
+    padding: 0 10px;
+    font-size: 16px;
+ /* обычный цвет по умолчанию */
+    transition: color 200ms ease-in-out;
+}
+
+#custom-notification.notification,
+#custom-notification.dnd-notification,
+#custom-notification.inhibited-notification,
+#custom-notification.dnd-inhibited-notification {
+    color: red;
+}

@@ -1,0 +1,103 @@
+{
+    "layer": "top",
+    "modules-left": ["clock#left", "pulseaudio"],
+    "modules-center": ["network", "hyprland/workspaces", "memory"],
+    "modules-right": ["custom/notification", "battery", "cava"],
+
+    "clock#left": {
+        "format": "{:%H:%M}"
+    }, 
+    "hyprland/workspaces": {
+	"format": "{icon}",
+	"format-icons": {
+		"1": "",
+		"2": "",
+		"3": "",
+		"4": "",
+		"5": "",
+		"6": "",
+		"7": "",
+		"8": "",
+		"9": "",
+		"10": ""
+	} 
+},
+    "battery": { 
+	"interval": 60,
+	"format": "{icon} {capacity}% ",
+	"format-icons": {
+		"default": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"],
+		"charging": ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰢞", "󰂊", "󰂋", "󰂅"]
+	}
+},
+	"pulseaudio": {
+	"format": " {icon} {volume}%",
+	"format-bluetooth": " {volume}%",
+	"format-muted": "",
+	"format-icons": {
+		"headphone": "",
+		"hands-free": "󰂑",
+		"headset": "󰂑",
+		"phone": "",
+		"phone-muted": "",
+		"portable": "",
+		"car": "",
+		"default": ["", ""]
+	},
+	"scroll-step": 1,
+	"on-click": "pavucontrol"
+},
+	"cava": {
+	//"cava_config": "$XDG_CONFIG_HOME/cava/cava.conf",
+	"framerate": 30,
+	"autosens": 0,
+	"sensitivity": 0.01,
+	"bars": 6,
+	"lower_cutoff_freq": 50,
+	"higher_cutoff_freq": 10000,
+	"hide_on_silence": false,
+	"method": "pipewire",
+	"source": "auto",
+	"stereo": true,
+	"reverse": false,
+	"bar_delimiter": 0, 
+	"monstercat": false,
+	"waves": false,
+	"noise_reduction": 0.27,
+	"input_delay": 2,
+	"format-icons" : ["▁", "▂", "▃", "▄", "▅", "▆", "▇", "█" ],
+	"actions": {
+		"on-click-right": "mode"
+	}
+},
+
+	"memory": {
+	"interval": 30,
+	"format": "{}% ",
+	"max-length": 10
+},
+	"network": {
+	"interface": "wlp4s0",
+	"format": "{ifname}",
+	"format-wifi": "({signalStrength}%) ",
+	"format-ethernet": "{ifname} ",
+	"format-disconnected": "", //An empty format will hide the module.
+	"tooltip-format": "{ifname}",
+	"tooltip-format-wifi": "({signalStrength}%)  ",
+	"tooltip-format-ethernet": "{ifname} ",
+	"tooltip-format-disconnected": "Disconnected",
+	"max-length": 50
+},
+
+	"custom/notification": {
+    "tooltip": true,
+    "format": "󰂚",
+    "return-type": "json",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+}
+
+
+}
