@@ -4,7 +4,7 @@
 
 -- Set programs that you use
 local terminal    = "kitty"
-local fileManager = "dolphin"
+local fileManager = "kitty -e yazi"
 local menu        = "hyprlauncher"
 
 ---------------------
@@ -25,8 +25,8 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 
-hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("swaync-client -t -sw"))
+-- hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
+hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
