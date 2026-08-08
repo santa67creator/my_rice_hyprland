@@ -25,7 +25,17 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 
--- hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
+-- layout Scrolling
+hl.bind(mainMod .. " + KP_End", hl.dsp.layout("move +col"))
+hl.bind(mainMod .. " + SHIFT + KP_End", hl.dsp.layout("move -col"))
+hl.bind(mainMod .. " + KP_Down", hl.dsp.layout("swapcol l"))
+hl.bind(mainMod .. " + SHIFT + KP_Down", hl.dsp.layout("swapcol r"))
+
+hl.bind(mainMod .. " + SHIFT + KP_Next", hl.dsp.layout("expel none"))
+hl.bind(mainMod .. " + KP_Next", hl.dsp.layout("consume none"))
+--- you can change on period, comma, and slash
+
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 
 -- Move focus with mainMod + arrow keys
