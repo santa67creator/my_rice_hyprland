@@ -57,14 +57,16 @@ keymap = [
 	{ on = "J", run = "seek 5",  desc = "Seek down 5 units in the preview" },
 
 	# Spotting
-	{ on = "<Tab>", run = "spot", desc = "Spot hovered file" },
+	# Still spot -- but while the screen is split, <Tab> is the pane switcher
+	# instead. See plugins/dualpane.yazi. Spot is also on <C-g>.
+	{ on = "<Tab>", run = "plugin dualpane smart_tab", desc = "Switch pane (split) / spot hovered file" },
 
 	# Operation
 	{ on = "o",         run = "open",                        desc = "Open selected files" },
 	{ on = "O",         run = "open --interactive",          desc = "Open selected files interactively" },
 	{ on = "<Enter>",   run = "open",                        desc = "Open selected files" },
 	{ on = "<S-Enter>", run = "open --interactive",          desc = "Open selected files interactively" },
-	{ on = "y",         run = "yank",                        desc = "Yank selected files (copy)" },
+	{ on = "y",         run = ['shell -- for path in %s; do echo "file://$path"; done | wl-copy -t text/uri-list', "yank"], desc = "Yank selected files (copy)" },
 	{ on = "x",         run = "yank --cut",                  desc = "Yank selected files (cut)" },
 	{ on = "p",         run = "paste",                       desc = "Paste yanked files" },
 	{ on = "P",         run = "paste --force",               desc = "Paste yanked files (overwrite if the destination exists)" },
@@ -85,6 +87,28 @@ keymap = [
 	{ on = "<C-s>",     run = "escape --search",             desc = "Cancel the ongoing search" },
 	{ on = "z",         run = "plugin fzf",                  desc = "Jump to a file/directory via fzf" },
 	{ on = "Z",         run = "plugin zoxide",               desc = "Jump to a directory via zoxide" },
+
+	# Drag and drop is native on Yazi nightly (kitty OSC-72, PR #4005) -- just press
+	# and drag a file row. These two stay as a fallback for when a nightly build
+	# regresses, or on a terminal without the protocol; `kitten dnd` needs kitty 0.47+.
+	{ on = "<A-d>", run = 'shell --block -- kitten dnd --exit-on drag-finish,esc-key -- %s',                                            desc = "Drag selected files out to a GUI app" },
+	{ on = "<A-D>", run = 'shell --block -- kitten dnd --exit-on drop-finish,esc-key --drop-anywhere copy --confirm-drop-overwrite',    desc = "Drop target: drag files in from another app" },
+	# Yank first (the `session` plugin syncs it over DDS on its own), then nudge
+	# every other instance to paste. The subscriber lives in init.lua.
+	{ on = "<A-p>", run = [ "yank", 'shell -- ya pub-to 0 yank-push --str go' ],                                                        desc = "Push selection to the other Yazi window" },
+
+	# Dual pane -- two directories side by side in *one* window, the in-window
+	# counterpart to the cross-window push above. Rendered by split-tabs.yazi,
+	# driven by plugins/dualpane.yazi. <Tab> switches panes (see Spotting).
+	{ on = "\\",    run = "plugin dualpane toggle",         desc = "Dual pane: split / unsplit" },
+	{ on = "<A-v>", run = "plugin split-tabs spl_preview",  desc = "Dual pane: toggle preview strip" },
+	{ on = "<A-y>", run = "plugin dualpane copy",           desc = "Dual pane: copy selection to other pane" },
+	{ on = "<A-x>", run = "plugin dualpane move",           desc = "Dual pane: move selection to other pane" },
+
+	# One press for the pairing this was built for; splits first if needed.
+	# The `--` matters: without it Yazi takes only the first word as the plugin's
+	# argument and silently drops the two paths.
+	{ on = [ "g", "s" ], run = "plugin dualpane -- preset ~/Downloads ~/.config", desc = "Dual pane: Downloads | .config" },
 
 	# Linemode
 	{ on = [ "m", "s" ], run = "linemode size",        desc = "Linemode: size" },

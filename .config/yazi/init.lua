@@ -1,6 +1,17 @@
--- init.lua - Superfile-inspired layout for Yazi 26.5.6
+-- init.lua - Superfile-inspired layout for Yazi
 -- Adds a bottom info row (Processes | Metadata | Clipboard) and a quick-access bar
 -- (Pinned | Home / Downloads / Trash | Disk). Colors follow the existing theme.
+
+-- Cross-instance yank: yanking in one window makes the files pasteable in every
+-- other running window. Rides DDS, so the state also survives a restart.
+-- Instances started before this line loads won't participate -- restart them all.
+require("session"):setup { sync_yanked = true }
+
+-- Receiver for the `<A-p>` binding in keymap.toml, which yanks and then broadcasts
+-- to every other instance. The yanked list itself is already synced by `session`
+-- above, so this only has to be a "now paste" nudge -- shipping the file list here
+-- would just mean reassembling it on the far side for no gain.
+ps.sub_remote("yank-push", function() ya.emit("paste", {}) end)
 
 local ACCENT = "#89b4fa"
 local LABEL = "#a6adc8"
@@ -219,6 +230,147 @@ function QuickBar:redraw()
 	}
 end
 
+-- ---------------------------------------------------------------------------
+-- Drag a file row onto another directory to move it, within this one window.
+--
+-- Yazi 26.5.6 only ships drag-and-drop with *other* applications: Current:drag
+-- answers the terminal's OSC-72 "offer" by handing the selection to the system
+-- drag, and Current:drop deliberately refuses a drag that yazi itself started.
+-- Nothing handles a drag that begins and ends inside this window, and Parent
+-- and Preview have no drag hook at all.
+--
+-- Legacy mouse drags arrive as Root:drag with event.type == "legacy"; OSC-72
+-- drags come through the same hook as "offer"/"land"/"end". Only the legacy
+-- ones are claimed below, so dragging out to a GUI app and Rail's
+-- drag-to-resize both keep their existing behaviour.
+--
+-- Two constraints from the preset shape this code. Root:drag always dispatches
+-- to the component the press *started* on, never the one under the cursor, so
+-- the drop target is hit-tested here. And component tables outlive an event
+-- while the userdata inside them (_folder, _tab, files) does not -- it is
+-- scoped to a single event -- hence the owned Url() copies and the re-lookup
+-- by _id rather than stashing the component itself.
+local saved_root_click, saved_root_drag = Root.click, Root.drag
+
+-- src: { id, url, cwd } captured on press. files: owned Urls, filled on the
+-- first drag event. area/label: the drop-target highlight, nil when parked.
+local drag = {}
+
+-- A pane is any component exposing a folder: parent, current, preview when it
+-- is listing a directory, and each side of the split-tabs layout (its Pane
+-- wrapper delegates reflow to the inner Current, so that is what surfaces).
+local function pane_at(root, event)
+	local c = ya.child_at(ui.Rect { x = event.x, y = event.y }, root:reflow())
+	return c and c._folder and c or nil
+end
+
+local function row_at(c, event)
+	local w = c._folder.window
+	return w and w[event.y - c._area.y + 1]
+end
+
+-- Where a release over `c` would put the files: the directory under the
+-- cursor, else the directory the pane is listing. Returned owned, so it stays
+-- valid after this event's scope closes.
+local function target_at(c, event)
+	local f = row_at(c, event)
+	if f and f.cha.is_dir then
+		return Url(tostring(f.url))
+	end
+	return Url(tostring(c._folder.cwd))
+end
+
+local function find_pane(root, id)
+	for _, c in ipairs(root:reflow()) do
+		if c._id == id and c._folder then
+			return c
+		end
+	end
+end
+
+local function move_into(to)
+	cx.tasks.behavior:reset()
+	for _, from in ipairs(drag.files) do
+		-- Guard the two no-ops the file tasks would otherwise act on: a file
+		-- landing back in its own directory, and a directory dropped into
+		-- itself or one of its own descendants.
+		if tostring(from.parent) ~= tostring(to) and not to:starts_with(from) then
+			local dest = to:join(from.name)
+			ya.async(function() ya.task("cut", { from = from, to = dest, force = false }):spawn() end)
+		end
+	end
+end
+
+local function park()
+	local shown = drag.area ~= nil
+	drag = {}
+	if shown then
+		ui.render()
+	end
+end
+
+function Root:click(event, up)
+	if up then
+		if drag.files then
+			local c = pane_at(self, event)
+			if c then
+				move_into(target_at(c, event))
+			end
+		end
+		park()
+	elseif event.is_left then
+		-- Remember the press, cheaply. The selection is read later, on the
+		-- first actual drag, so a plain click costs one Url copy.
+		local c = pane_at(self, event)
+		local f = c and row_at(c, event)
+		drag = f and { id = c._id, url = Url(tostring(f.url)), cwd = tostring(c._folder.cwd) } or {}
+	end
+
+	return saved_root_click(self, event, up)
+end
+
+function Root:drag(event)
+	if event.type ~= "legacy" or not (drag.id and event.is_left) then
+		return saved_root_drag(self, event) -- OSC-72 drag-out, rail resize
+	end
+
+	if not drag.files then
+		local src = find_pane(self, drag.id)
+		local files = {}
+		-- Move the whole selection when there is one, matching yank/paste and
+		-- dnd.selected_uri_list. Read from the source pane's own tab, which is
+		-- not necessarily the active one while split. Iterating `selected`
+		-- yields File, not Url -- same as dnd.selected_uri_list does.
+		for _, f in pairs(src and src._tab.selected or {}) do
+			files[#files + 1] = Url(tostring(f.url))
+		end
+		drag.files = #files > 0 and files or { drag.url }
+	end
+
+	local c = pane_at(self, event)
+	local to = c and target_at(c, event)
+	local area, label
+	if to and tostring(to) ~= drag.cwd then
+		area = c._area
+		label = string.format("Move %d file(s) to %s", #drag.files, tostring(to.name or to))
+	end
+
+	if tostring(drag.label) ~= tostring(label) then
+		drag.area, drag.label = area, label
+		ui.render()
+	end
+end
+
+-- Highlight for the pane the files would land in. reflow returns nothing so it
+-- never becomes a hit-test target itself.
+local DropTip = { _id = "drop_tip" }
+
+function DropTip:new(area, text) return setmetatable({ _area = area, _text = text }, { __index = self }) end
+
+function DropTip:reflow() return {} end
+
+function DropTip:redraw() return Tip:new(self._area, self._text):redraw() end
+
 -- Root override: insert the info row and quick bar above the status line.
 function Root:layout()
 	self._chunks = ui.Layout()
@@ -235,7 +387,11 @@ function Root:layout()
 end
 
 function Root:build()
+	-- Backdrop must stay first: it paints the full area and everything else draws
+	-- on top. It is not in Yazi 26.5.6's preset -- if this config is ever rolled
+	-- back to stable, drop this line or Root:build will call a nil global.
 	self._children = {
+		Backdrop:new(self._area),
 		Header:new(self._chunks[1], cx.active),
 		Tabs:new(self._chunks[2]),
 		Tab:new(self._chunks[3], cx.active),
@@ -244,4 +400,9 @@ function Root:build()
 		Status:new(self._chunks[6], cx.active),
 		Modal:new(self._area),
 	}
+
+	-- Last, so the drop hint paints over the panes rather than under them.
+	if drag.area then
+		self._children[#self._children + 1] = DropTip:new(drag.area, drag.label)
+	end
 end
