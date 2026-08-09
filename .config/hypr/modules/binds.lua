@@ -18,6 +18,7 @@ hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
 local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(fileManager))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
@@ -25,7 +26,7 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
 
--- layout Scrolling
+-- layout Scrolling --- you can change on period, comma, and slash
 hl.bind(mainMod .. " + KP_End", hl.dsp.layout("move +col"))
 hl.bind(mainMod .. " + SHIFT + KP_End", hl.dsp.layout("move -col"))
 hl.bind(mainMod .. " + KP_Down", hl.dsp.layout("swapcol l"))
@@ -33,9 +34,9 @@ hl.bind(mainMod .. " + SHIFT + KP_Down", hl.dsp.layout("swapcol r"))
 
 hl.bind(mainMod .. " + SHIFT + KP_Next", hl.dsp.layout("expel none"))
 hl.bind(mainMod .. " + KP_Next", hl.dsp.layout("consume none"))
---- you can change on period, comma, and slash
 
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
+
+---hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("/home/san/.config/waybar/launch.sh"))
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("swaync-client -t -sw"))
 
 -- Move focus with mainMod + arrow keys
