@@ -1,0 +1,78 @@
+/* wlogout style — matches my_rice_hyprland palette
+   (gruvbox-material.css bg/fg + swaync's glass-overlay approach) */
+
+@define-color bg0 #1d2021;
+@define-color bg1 #282828;
+@define-color fg #d4be98;
+@define-color teal #7daea3;   /* == @blue in waybar/colors/gruvbox-material.css */
+@define-color aqua #89b482;
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 18px;
+    text-shadow: none;
+}
+
+window {
+    background-color: alpha(@bg0, 0.85);
+}
+
+button {
+    background-color: alpha(@bg1, 0.55);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 28%;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    border-radius: 22px;
+
+    color: @fg;
+
+    margin: 12px;
+    min-width: 170px;
+    min-height: 170px;
+
+    transition: all 200ms ease;
+}
+
+button:hover {
+    background-color: alpha(@teal, 0.16);
+    border: 1px solid alpha(@teal, 0.65);
+    color: #ffffff;
+}
+
+button:focus {
+    background-color: alpha(@teal, 0.22);
+    border: 1px solid @teal;
+    color: #ffffff;
+}
+
+button:active {
+    background-color: alpha(@teal, 0.32);
+    border: 1px solid @aqua;
+}
+
+/* Lock */
+#lock {
+    background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+}
+
+/* Logout */
+#logout {
+    background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+}
+
+/* Shutdown */
+#shutdown {
+    background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+}
+
+/* Reboot */
+#reboot {
+    background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+}
+
+/* Suspend */
+#suspend {
+    background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+}
