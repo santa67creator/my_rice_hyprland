@@ -11,7 +11,7 @@
      hl.exec_cmd("terminal")
      hl.exec_cmd("swaync")
      hl.exec_cmd("awww-daemon")
-     --hl.exec_cmd("nm-applet")
+     hl.exec_cmd("nm-applet")
      hl.exec_cmd("waybar")
      hl.exec_cmd("hyprctl setcursor Bibata-Modern-Amber 24")
    end)

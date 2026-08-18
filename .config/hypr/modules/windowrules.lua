@@ -58,6 +58,13 @@ hl.layer_rule({
     animation = "slide left",
 })
 
+-- hyprland.lua
+hl.layer_rule({
+  match = { namespace = "hyprshutdown" },
+  blur = true,
+  ignore_alpha = 0.3,
+})
+
 -- SwayNC notification popups.
 hl.layer_rule({
     name = "swaync-notification-window",

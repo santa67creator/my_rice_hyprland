@@ -60,6 +60,7 @@ hl.curve("linear",         { type = "bezier", points = { {0, 0},       {1, 1}   
 hl.curve("almostLinear",   { type = "bezier", points = { {0.5, 0.5},   {0.75, 1}    } })
 hl.curve("quick",          { type = "bezier", points = { {0.15, 0},    {0.1, 1}     } })
 hl.curve("easeInOutQuart", { type = "bezier", points = { {0.76, 0},    {0.24, 1}     } })
+hl.curve("md3_decel", { type = "bezier", points = { {0.05, 0.7}, {0.1, 1} } })
 
 -- Default springs
 hl.curve("easy",           { type = "spring", mass = 1, stiffness = 75.2633, dampening = 15.8273644 })
@@ -77,7 +78,7 @@ hl.animation({ leaf = "layersIn",      enabled = true,  speed = 4,    spring = "
 hl.animation({ leaf = "layersOut",     enabled = true,  speed = 1.5,  spring = "easy",       style = "fade" })
 hl.animation({ leaf = "fadeLayersIn",  enabled = true,  speed = 1.79, bezier = "almostLinear" })
 hl.animation({ leaf = "fadeLayersOut", enabled = true,  speed = 1.39, bezier = "almostLinear" })
-hl.animation({ leaf = "workspaces",    enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.21, bezier = "almostLinear", style = "fade" })
-hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "almostLinear", style = "fade" })
+hl.animation({ leaf = "workspaces",    enabled = true,  speed = 2.5,  bezier = "md3_decel", style = "slide" })
+hl.animation({ leaf = "workspacesIn",  enabled = true,  speed = 1.91, bezier = "md3_decel", style = "slide" })
+hl.animation({ leaf = "workspacesOut", enabled = true,  speed = 1.94, bezier = "md3_decel", style = "slide" })
 hl.animation({ leaf = "zoomFactor",    enabled = true,  speed = 7,    bezier = "quick" })
