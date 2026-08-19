@@ -35,7 +35,12 @@ This repo is both a personal daily driver and a build log: every dotfile here is
 
 ## 🖼 Preview
 
-*(Add screenshots/GIFs of the desktop, lock screen, wlogout menu and notification center here — this section is intentionally a placeholder until I capture them.)*
+<img width="1920" height="1080" alt="2026-08-19-113211_hyprshot" src="https://github.com/user-attachments/assets/27af79ea-cffb-4ae0-9126-18b5b6398dcf" />  
+
+<img width="1920" height="1080" alt="2026-08-18-125344_hyprshot" src="https://github.com/user-attachments/assets/4eb29449-3f5c-45b3-83b6-aca6ea85239c" />
+
+<img width="1920" height="1080" alt="2026-08-19-120326_hyprshot" src="https://github.com/user-attachments/assets/97b130ce-1b6d-4133-b177-faeba46a42c1" />
+
 
 The included wallpaper set lives in [`.config/quickshell/hyprquickpaper/Wallpapers`](.config/quickshell/hyprquickpaper/Wallpapers) and is cycled through by `hyprquickpaper`.
 
