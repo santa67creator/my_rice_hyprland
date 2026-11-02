@@ -39,12 +39,23 @@ hl.config({
 
         blur = {
             enabled   = true,
-            size      = 8,
+            size      = 1,
             passes    = 3,
             noise = 0.01,
             contrast = 1.1,
             brightness = 0.9,
             vibrancy  = 0.1696,
+
+            variant = "heat_shimmer",
+            heat_shimmer = 
+            {speed = 1.0,}, 
+        },
+
+        wobble = {
+            enabled = true,
+            intensity = 0.5,
+            stiffness = 200,
+            damping = 12,
         },
     },
 
